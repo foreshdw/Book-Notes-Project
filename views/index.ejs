@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Home</title>
+</head>
+<body class="bg-gray-100 text-gray-800 p-6 flex flex-col">
+  <!-- Title Section -->
+  <section class="max-w-5xl mx-auto">
+    <h2 class="text-2xl font-bold mb-1">Welcome to MyBookNotes</h2>
+    <p class="mb-4 font-normal">
+      Discover a space designed to document your literary adventures, where every book you read becomes part of your personal journey. MyBookNotes is a platform created as a Capstone project, blending the love of books with the power of technology. Here, you can record reflections, insights, and favorite quotes from your readings—all in one place.
+    </p>
+    <div class="border-b-2 border-gray-400 w-full mb-4"></div>
+  </section>
+
+  <!-- Sorting & New Post -->
+  <section class="flex flex-col max-w-5xl mx-auto bg-white p-4 shadow rounded-lg h-full w-full">
+    <div class="flex justify-between items-center mb-4">      
+      <!-- Sorting Dropdown -->
+      <form action="/" method="get">
+        <label for="sort">Sort by:</label>
+        <select name="sort" id="sort" onchange="this.form.submit()">
+            <option value="">Default</option>
+            <option value="rating">Highest Rating</option>
+            <option value="date_read">Newest First</option>
+            <option value="title">A-Z</option>
+        </select>
+      </form>
+      <!-- New Post Button -->
+      <div class="ml-auto">
+        <form action="/new" method="GET">
+          <button type="submit" class="bg-lime-600 text-white font-medium py-2 px-3 rounded-lg hover:bg-lime-500 focus:outline-none focus:ring-2 focus:ring-lime-600">
+            New Post
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <% if (listItems.length > 0) { %>
+      <% listItems.forEach(item => { %>
+        <div class="mb-4">
+          <div class="flex-row w-full mx-auto rounded-lg mb-4 h-full">
+            <!-- Cover Gambar -->
+            <img 
+              src="<%= item.cover_url %>" 
+              alt="Cover Image" 
+              class="sm:float-left mx-auto sm:mb-1 sm:mr-4 mb-4 rounded shadow-md w-44"
+            />
+            <!-- Konten Teks -->
+            <div class="mb-4">
+              <h2 class="text-2xl font-bold mb-1"><%= item.title %></h2>
+              <p class="mb-3 font-light">
+                Date read: <%= item.date_read %> | Rating: <%= item.rating %>/5.0 ⭐
+              </p>
+              <p><%= item.content %></p>
+            </div>
+          </div>
+          <!-- Tombol -->
+          <div class="flex flex-row gap-1">
+            <form action="/edit/<%= item.id %>" method="GET">
+              <button type="submit" class="bg-blue-600 text-white font-medium py-2 px-3 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                Edit
+              </button>
+            </form>
+            <form action="/delete/<%= item.id %>" method="POST">
+              <button type="submit" onclick="return confirm('Are you sure you want to delete this book?')" class="bg-red-600 text-white font-medium py-2 px-3 rounded-lg hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-600">Delete</button>
+            </form>
+          </div>
+        </div>
+      <% }); %>
+    <% } else { %>
+      <p class="max-w-5xl mx-auto text-gray-500 text-center w-full">No notes available. Create a new one!</p>
+    <% } %>
+  </section>
+
+  <!-- JavaScript untuk Sorting -->
+  <script>
+    document.getElementById("sort").addEventListener("change", function() {
+      const sortBy = this.value;
+      window.location.href = `/?sort=${sortBy}`;
+    });
+  </script>
+</body>
+</html>
